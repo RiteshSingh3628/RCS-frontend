@@ -1,19 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { TextField, Button, Typography, Alert, Box } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const [loginError, setLoginError] = React.useState('');
+  const [loginError, setLoginError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-  const onSubmit = (data) => {
-    // TODO: Replace with real authentication logic
-    if (data.email !== 'admin@example.com' || data.password !== 'password123!') {
-      setLoginError('Invalid email or password');
-    } else {
-      setLoginError('');
-      // Redirect or set auth state
+  const onSubmit = async (data) => {
+    setIsLoading(true);
+    setLoginError('');
+    
+    try {
+      const result = await login({
+        username: data.email.split('@')[0], // Extract username from email
+        email: data.email,
+        password: data.password
+      });
+      
+      if (result.success) {
+        navigate('/dashboard');
+      } else {
+        setLoginError(result.error || 'Login failed');
+      }
+    } catch (error) {
+      setLoginError('An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -38,6 +55,7 @@ function Login() {
             })}
             error={!!errors.email}
             helperText={errors.email?.message}
+            disabled={isLoading}
           />
           <TextField
             label="Password"
@@ -47,6 +65,7 @@ function Login() {
             {...register('password', { required: 'Password is required' })}
             error={!!errors.password}
             helperText={errors.password?.message}
+            disabled={isLoading}
           />
           <Button
             type="submit"
@@ -54,16 +73,22 @@ function Login() {
             color="primary"
             fullWidth
             className="py-3 font-semibold"
+            disabled={isLoading}
           >
-            Login
+            {isLoading ? 'Logging in...' : 'Login'}
           </Button>
         </form>
         <div className="mt-6 text-center">
           <Typography variant="body2">
             Don't have an account?{' '}
-            <Link to="/user/register" className="text-indigo-600 hover:underline font-semibold">
+            <Link to="/register" className="text-indigo-600 hover:underline font-semibold">
               Register
             </Link>
+          </Typography>
+        </div>
+        <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+          <Typography variant="caption" className="text-gray-600 block text-center">
+            Demo: Use any email and password to login
           </Typography>
         </div>
       </Box>
