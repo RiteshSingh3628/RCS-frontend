@@ -11,6 +11,7 @@ const BASE_URL = 'http://127.0.0.1:8000/api';
 
 // Utility functions
 function getToken() {
+  // console.log("token",localStorage.getItem('token'));
   return localStorage.getItem('token');
 }
 
@@ -70,22 +71,22 @@ export const auth = {
 export const businesses = {
   // Business CRUD operations
   list: (companyId = null) => {
-    const endpoint = companyId ? `/businesses/?company_id=${companyId}` : '/businesses/';
+    const endpoint = companyId ? `/business/?company_id=${companyId}` : '/business/';
     return apiRequest(endpoint, 'GET', null, true);
   },
-  get: (id) => apiRequest(`/businesses/${id}/`, 'GET', null, true),
-  create: (data) => apiRequest('/businesses/', 'POST', data, true),
-  update: (id, data) => apiRequest(`/businesses/${id}/`, 'PUT', data, true),
-  patch: (id, data) => apiRequest(`/businesses/${id}/`, 'PATCH', data, true),
-  delete: (id) => apiRequest(`/businesses/${id}/`, 'DELETE', null, true),
+  get: (id) => apiRequest(`/business/${id}/`, 'GET', null, true),
+  create: (data) => apiRequest('/business/', 'POST', data, true),
+  update: (id, data) => apiRequest(`/business/`, 'PUT', data, true),
+  patch: (id, data) => apiRequest(`/business/${id}/`, 'PATCH', data, true),
+  delete: (id) => apiRequest(`/business/${id}/`, 'DELETE', null, true),
   
   // Business-specific data
   getReviews: (businessId, params = {}) => {
     const queryParams = new URLSearchParams(params).toString();
-    const endpoint = `/businesses/${businessId}/reviews/${queryParams ? `?${queryParams}` : ''}`;
+    const endpoint = `/business/${businessId}/reviews/${queryParams ? `?${queryParams}` : ''}`;
     return apiRequest(endpoint, 'GET', null, true);
   },
-  getStats: (businessId) => apiRequest(`/businesses/${businessId}/stats/`, 'GET', null, true),
+  getStats: (businessId) => apiRequest(`/business/${businessId}/stats/`, 'GET', null, true),
 };
 
 // ============================================================================
@@ -425,10 +426,16 @@ export async function apiRequest(endpoint, method = 'GET', data = null, requireA
 
   if (!response.ok) {
     let errorMsg = 'API request failed';
+    let errorStatus = response.status;
     try {
       const errorData = await response.json();
       errorMsg = errorData.detail || JSON.stringify(errorData);
     } catch (e) {}
+    // Handle expired/invalid token
+    if (errorStatus === 401 || errorStatus === 403) {
+      localStorage.removeItem('token');
+      // Do not redirect here; let AuthProvider or route protection handle it
+    }
     throw new Error(errorMsg);
   }
 

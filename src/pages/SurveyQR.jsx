@@ -154,7 +154,7 @@ const SurveyQR = () => {
   const QuestionCard = ({ question }) => (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
       <div className="flex justify-between items-start mb-4">
-        <div className="flex-1">
+        <div className="flex-1 ml-0 ">
           <div className="flex items-center space-x-3 mb-2">
             <span className="inline-flex items-center justify-center w-8 h-8 bg-indigo-100 text-indigo-700 rounded-full text-sm font-semibold">
               {question.order}
@@ -288,7 +288,7 @@ const SurveyQR = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex">
       <Navigation onLogout={handleLogout} />
-      <div className="flex-1 ml-64">
+      <div className="flex-1 ml-0 sm:ml-64">
         <div className="p-6">
           {/* Header */}
           <div className="mb-8">

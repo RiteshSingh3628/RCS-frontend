@@ -1,15 +1,9 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { apiRequest } from '../api/api';
+import { auth } from '../api/api';
 
 const AuthContext = createContext();
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -25,13 +19,9 @@ export const AuthProvider = ({ children }) => {
       const token = localStorage.getItem('token');
       if (token) {
         // For demo purposes, set a mock user
-        setUser({
-          id: 1,
-          username: 'admin',
-          email: 'admin@example.com',
-          first_name: 'Admin',
-          last_name: 'User'
-        });
+        const response  = await auth.getProfile();
+        console.log(response);
+        setUser(response);
       }
     } catch (error) {
       console.error('Auth check failed:', error);
@@ -44,17 +34,21 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     try {
       // For demo purposes, always succeed
-      const mockUser = {
-        id: 1,
-        username: credentials.username,
-        email: credentials.email || 'user@example.com',
-        first_name: 'Demo',
-        last_name: 'User'
-      };
-      
-      setUser(mockUser);
-      localStorage.setItem('token', 'demo-token');
-      return { success: true };
+      // const mockUser = {
+      //   id: 1,
+      //   username: credentials.username,
+      //   email: credentials.email || 'user@example.com',
+      //   first_name: 'Demo',
+      //   last_name: 'User'
+      // };
+      const response = await auth.login(credentials);
+      // setUser(mockUser);
+      // console.log(response)
+      if(response){
+        setUser(response.user);
+        localStorage.setItem('token', response.tokens?.access);
+      }
+      return { success: true,message: response.message };
     } catch (error) {
       console.error('Login failed:', error);
       return { success: false, error: error.message };
@@ -63,21 +57,19 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      // For demo purposes, always succeed
-      const mockUser = {
-        id: 1,
-        username: userData.username,
-        email: userData.email,
-        first_name: userData.first_name || 'Demo',
-        last_name: userData.last_name || 'User'
-      };
-      
-      setUser(mockUser);
-      localStorage.setItem('token', 'demo-token');
-      return { success: true };
+      const response = await auth.register(userData);
+      if (response.success) {
+        const user = response.data;
+        console.log("response after registering",response.data);
+        setUser(user);
+        localStorage.setItem('token', response.token);
+        return { success: true };
+      } else {
+        return { success: false, error: response.message || 'Registration failed' };
+      }
     } catch (error) {
       console.error('Registration failed:', error);
-      return { success: false, error: error.message };
+      return { success: false, error: error.message || 'An unexpected error occurred' };
     }
   };
 
@@ -100,4 +92,12 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 };

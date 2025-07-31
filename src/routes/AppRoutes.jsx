@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-
+import { CompanyProvider } from '../context/CompanyContext';
 // Import pages
 import Landing from '../pages/Landing';
 import Login from '../pages/Login';
@@ -12,13 +12,14 @@ import Businesses from '../pages/Businesses';
 import Widget from '../pages/Widget';
 import SurveyQR from '../pages/SurveyQR';
 import Profile from '../pages/Profile';
-import Admin from '../pages/Admin';
+import Archive from '../pages/Archive';
 import Categories from '../pages/Categories';
+import Statistics from '../pages/Statistics';
 
 // Protected Route component
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
-  
+  // console.log(user)
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -54,15 +55,15 @@ const AppRoutes = () => {
       <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
       
       {/* Protected routes */}
-      <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-      <Route path="/reviews" element={<ProtectedRoute><Reviews /></ProtectedRoute>} />
-      <Route path="/businesses" element={<ProtectedRoute><Businesses /></ProtectedRoute>} />
-      <Route path="/widget" element={<ProtectedRoute><Widget /></ProtectedRoute>} />
-      <Route path="/survey-qr" element={<ProtectedRoute><SurveyQR /></ProtectedRoute>} />
-      <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-      <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-      <Route path="/categories" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
-      
+      <Route path="/dashboard" element={<ProtectedRoute><CompanyProvider><Dashboard /></CompanyProvider></ProtectedRoute>} />
+      <Route path="/reviews" element={<ProtectedRoute><CompanyProvider><Reviews /></CompanyProvider></ProtectedRoute>} />
+      <Route path="/businesses" element={<ProtectedRoute><CompanyProvider><Businesses /></CompanyProvider></ProtectedRoute>} />
+      <Route path="/widget" element={<ProtectedRoute><CompanyProvider><Widget /></CompanyProvider></ProtectedRoute>} />
+      <Route path="/survey-qr" element={<ProtectedRoute><CompanyProvider><SurveyQR /></CompanyProvider></ProtectedRoute>} />
+      <Route path="/profile" element={<ProtectedRoute><CompanyProvider><Profile /></CompanyProvider></ProtectedRoute>} />
+      <Route path="/archive" element={<ProtectedRoute><CompanyProvider><Archive /></CompanyProvider></ProtectedRoute>} />
+      <Route path="/categories" element={<ProtectedRoute><CompanyProvider><Categories /></CompanyProvider></ProtectedRoute>} />
+      <Route path="/stats" element={<ProtectedRoute><CompanyProvider><Statistics /></CompanyProvider></ProtectedRoute>} />
       {/* Fallback route */}
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>

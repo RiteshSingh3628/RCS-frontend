@@ -77,7 +77,7 @@ const LandingPage = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium"
-                onClick={()=>{navigate('/user/register')}}
+                onClick={()=>{navigate('/register')}}
               >
                 Get Started
               </motion.button>
@@ -85,7 +85,7 @@ const LandingPage = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="bg-white text-indigo-600 px-4 py-2 rounded-md text-sm font-medium"
-                onClick={()=>{navigate('/user/login')}}
+                onClick={()=>{navigate('/login')}}
               >
                 Login
               </motion.button>
@@ -168,7 +168,7 @@ const LandingPage = () => {
                 transition={{ duration: 0.3 }}
                 className="flex flex-col md:flex-row items-center gap-8"
               >
-                <div className="flex-1">
+                <div className="flex-1 ml-0 ">
                   <h3 className="text-2xl font-bold text-gray-900 mb-4">Email-Triggered Feedback</h3>
                   <p className="text-gray-600 mb-6">
                     Automatically send personalized feedback requests after purchases. 

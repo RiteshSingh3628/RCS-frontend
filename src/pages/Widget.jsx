@@ -1,13 +1,53 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import { FaCopy, FaCode, FaEye, FaPalette, FaCog, FaDownload } from 'react-icons/fa';
+// import { useCompany } from '../context/CompanyContext';
+
+// Dummy business data
+const dummyBusinesses = [
+  {
+    id: 1,
+    name: "Tech Solutions Inc.",
+    description: "Leading technology consulting firm",
+    rating: 4.8,
+    reviewCount: 245
+  },
+  {
+    id: 2,
+    name: "Green Earth Restaurant",
+    description: "Organic farm-to-table dining experience",
+    rating: 4.6,
+    reviewCount: 189
+  },
+  {
+    id: 3,
+    name: "Fitness First Gym",
+    description: "Premium fitness and wellness center",
+    rating: 4.9,
+    reviewCount: 312
+  },
+  {
+    id: 4,
+    name: "Creative Design Studio",
+    description: "Professional graphic design and branding",
+    rating: 4.7,
+    reviewCount: 156
+  },
+  {
+    id: 5,
+    name: "Home Comfort Services",
+    description: "Reliable home maintenance and repair",
+    rating: 4.5,
+    reviewCount: 203
+  }
+];
 
 const Widget = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [selectedBusiness, setSelectedBusiness] = useState('');
+  const [selectedBusiness, setSelectedBusiness] = useState(1);
   const [widgetStyle, setWidgetStyle] = useState('modern');
   const [widgetColor, setWidgetColor] = useState('#4F46E5');
   const [widgetSize, setWidgetSize] = useState('medium');
@@ -17,12 +57,11 @@ const Widget = () => {
   const [generatedCode, setGeneratedCode] = useState('');
   const [previewMode, setPreviewMode] = useState('widget');
 
-  // Mock businesses
-  const businesses = [
-    { id: 1, name: 'Pizza Palace' },
-    { id: 2, name: 'TechRepair Pro' },
-    { id: 3, name: 'Green Fitness Center' },
-  ];
+  // Use dummy businesses data
+  const businesses = dummyBusinesses;
+
+  // const {businesses} = useCompany() 
+
 
   const handleLogout = () => {
     logout();
@@ -123,7 +162,7 @@ const Widget = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex">
       <Navigation onLogout={handleLogout} />
-      <div className="flex-1 ml-64">
+      <div className="flex-1 ml-0 sm:ml-64">
         <div className="p-6">
           {/* Header */}
           <div className="mb-8">
@@ -142,7 +181,7 @@ const Widget = () => {
                 </h2>
                 
                 <div className="space-y-4">
-                  <div>
+                  {/* <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Select Business
                     </label>
@@ -158,7 +197,7 @@ const Widget = () => {
                         </option>
                       ))}
                     </select>
-                  </div>
+                  </div> */}
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -172,10 +211,10 @@ const Widget = () => {
                           className={`p-3 border rounded-md text-center transition-colors ${
                             widgetStyle === style 
                               ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
-                              : 'border-gray-300 hover:border-gray-400'
+                              : 'border-gray-300 hover:border-gray-400 text-gray-600'
                           }`}
                         >
-                          <div className="text-sm font-medium capitalize">{style}</div>
+                          <div className="text-sm font-medium capitalize ">{style}</div>
                         </button>
                       ))}
                     </div>
@@ -193,7 +232,7 @@ const Widget = () => {
                           className={`p-3 border rounded-md text-center transition-colors ${
                             widgetSize === size 
                               ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
-                              : 'border-gray-300 hover:border-gray-400'
+                              : 'border-gray-300 hover:border-gray-400 text-gray-600'
                           }`}
                         >
                           <div className="text-sm font-medium capitalize">{size}</div>
@@ -249,7 +288,7 @@ const Widget = () => {
                           className={`p-3 border rounded-md text-center transition-colors ${
                             widgetPosition === position.value 
                               ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
-                              : 'border-gray-300 hover:border-gray-400'
+                              : 'border-gray-300 hover:border-gray-400 text-gray-600'
                           }`}
                         >
                           <div className="text-sm font-medium">{position.label}</div>

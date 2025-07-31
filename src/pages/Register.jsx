@@ -50,25 +50,26 @@ const Register = () => {
       const userData = {
         first_name: data.firstName,
         last_name: data.lastName,
-        username: data.email.split('@')[0],
+        username: data.email.split('@')[0], // Using email as base for username
         email: data.email,
         password: data.password,
+        password_confirm: data.password, // Added password confirmation
+        phone_number: data.contact, // Using contact as phone_number
+        date_of_birth: data.dateOfBirth || new Date().toISOString().split('T')[0], // Added DOB
         business_name: data.businessName,
-        website: data.website,
-        contact: data.contact,
+        website_url: data.website, // Changed website to website_url
+        contact_number: data.contact, // Added contact_number
         country: data.country,
-        plan: selectedPlan
+        plan_type: selectedPlan.toLowerCase() // Changed plan to plan_type
       };
+      console.log("calling the register funciton")
       
       const result = await registerUser(userData);
       
-      if (result.success) {
-        setSubmitted(true);
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 2000);
+      if (result) {
+        navigate('/login');
       } else {
-        setRegistrationError(result.error || 'Registration failed');
+        setRegistrationError('Registration failed');
       }
     } catch (error) {
       setRegistrationError('An unexpected error occurred');
@@ -94,7 +95,7 @@ const Register = () => {
           <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col justify-center">
             <form className="space-y-5" onSubmit={handleSubmit(onSubmit)} id="register-form" noValidate>
               <div className="flex gap-4">
-                <div className="flex-1">
+                <div className="flex-1 ml-0 ">
                   <label className="block text-gray-700 mb-1">First Name</label>
                   <input
                     type="text"
@@ -167,6 +168,16 @@ const Register = () => {
                   disabled={isLoading}
                 />
                 {errors.contact && <Alert severity="error" className="mt-2">{errors.contact.message}</Alert>}
+              </div>
+              <div>
+                <label className="block text-gray-700 mb-1">Date of Birth</label>
+                <input
+                  type="date"
+                  {...register("dateOfBirth", { required: "Date of birth is required" })}
+                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  disabled={isLoading}
+                />
+                {errors.dateOfBirth && <Alert severity="error" className="mt-2">{errors.dateOfBirth.message}</Alert>}
               </div>
               <div>
                 <label className="block text-gray-700 mb-1">Country</label>

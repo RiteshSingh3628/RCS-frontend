@@ -17,15 +17,15 @@ function Login() {
     
     try {
       const result = await login({
-        username: data.email.split('@')[0], // Extract username from email
         email: data.email,
         password: data.password
       });
       
       if (result.success) {
+        console.log("login was successful")
         navigate('/dashboard');
       } else {
-        setLoginError(result.error || 'Login failed');
+        setLoginError('Login failed');
       }
     } catch (error) {
       setLoginError('An unexpected error occurred');

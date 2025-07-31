@@ -16,7 +16,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex">
       <Navigation onLogout={handleLogout} />
-      <div className="flex-1 ml-64">
+      <div className="flex-1 ml-0 sm:ml-64">
         <DashboardContent />
       </div>
     </div>
